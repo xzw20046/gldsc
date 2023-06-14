@@ -41,16 +41,18 @@ if(!require("doParallel",character.only = TRUE)){
   }
 }
 
-#rhdf5
-if(!require("rhdf5",character.only = TRUE)){
-  try_error <- try(install.packages("rhdf5", 
-                                    dependencies=TRUE), silent = TRUE)
-  if(class(try_error) == "try-error"){
-    try_error <- try(install.packages("rhdf5", 
-                                      dependencies=TRUE, 
-                                      lib = Sys.getenv("R_LIBS_USER")), silent = TRUE)
-  }
-}
+#rhdf5 R 4.1
+#if(!require("rhdf5",character.only = TRUE)){
+#  try_error <- try(install.packages("rhdf5", 
+#                                    dependencies=TRUE), silent = TRUE)
+#  if(class(try_error) == "try-error"){
+#    try_error <- try(install.packages("rhdf5", 
+#                                      dependencies=TRUE, 
+#                                      lib = Sys.getenv("R_LIBS_USER")), silent = TRUE)
+#  }
+#}
+
+#rhdf5 R 4.2
 
 import(Rcpp)
 import(RcppEigen)
@@ -58,3 +60,8 @@ import(inline)
 import(emulator)
 import(rhdf5)
 import(doParallel)
+
+export(middle_fun)
+export(gldsc)
+export(gLDSC_cts)
+export(mkLDSM)
