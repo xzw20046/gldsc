@@ -3,9 +3,10 @@ g-LDSC is a tool for estimating heritability and functional enrichment from GWAS
 # Tutorial
 g-LDSC is written under R-4.1.0. In this tutorial, we would give a demonstration of how g-LDSC is run under a Linux-based system.
 ## Installation
-We need to install all the packages in R before we run the tool.
+Install gldsc (R package) via devtools 
 ```
-Rscript Install.gLDSC.R
+#install.packages('devtools')
+devtools::install_github("xzw20046/gldsc")
 ```
 ## Input file
 3 files are required to run g-LDSC:
