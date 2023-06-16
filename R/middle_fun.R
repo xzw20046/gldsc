@@ -1,3 +1,4 @@
+#' @export
 crossprodCpp<-'using Eigen::Map;
 using Eigen::MatrixXd;
 using Eigen::Lower;
