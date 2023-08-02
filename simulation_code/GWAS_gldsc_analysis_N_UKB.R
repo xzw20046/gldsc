@@ -1,7 +1,7 @@
 
 
-load('/Users/zewei/local/str-HDL/data/chr10ref.pannel.Rdata')
-#load('/Users/zewei/local/str-HDL/data/chr10ref.DHS.pannel.Rdata')
+ref.pannel<-readRDS('/Users/zewei/local/str-HDL/data/chr10UKB.pannel.Rdata')
+attach(ref.pannel)
 
 source('/Users/zewei/Desktop/HKUgrad/G-LDSC/R/mlfun.R')
 simu<-50
@@ -86,7 +86,7 @@ for (N in c(500,2500,5000,10000,20000,50000)) {
         
         
         #saveRDS(raw.result,paste0(gwas.out,'/gls.result.2cat.Rdata'))
-        saveRDS(raw.result,paste0(gwas.out,'/gls.result.Rdata'))
+        saveRDS(raw.result,paste0(gwas.out,'/gls.result_UKB.Rdata'))
       }
     }
   }

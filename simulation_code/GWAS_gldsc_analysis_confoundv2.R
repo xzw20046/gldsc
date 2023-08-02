@@ -6,23 +6,29 @@ load('/Users/zewei/local/str-HDL/data/chr10ref.pannel.Rdata')
 source('/Users/zewei/Desktop/HKUgrad/G-LDSC/R/mlfun.R')
 simu<-50
 p.hole<-0.05/24
-simu.name='DHS_newN'
-
+simu.name='Confounding'
+total.stat.n<-7
 registerDoParallel(5)
 
 x.sum<-Reduce(sum,lapply(x.gls, sum))
 
 #change DHSenrichment to c(1,2,3)
 #N in c(5000,50000,500000)
-for (N in c(500,2500,5000,10000,20000,50000)) {
+for (N in c(2000,10000,50000)){
   for (prob.causal in c(0.05)) {
-    for (heritability in c(0.04,0.4)) {
-      for (DHSenrichment in c(1,2,3)) {
+    for (heritability in c(0.4)) {
+      for (DHSenrichment in c(3)) {
+        for (alpha in c(0,0.2/10000,1/10000,5/10000)) {
+        #set.seed(seedno+N)
+        confound=1+N*alpha
         gwas.out<-paste0('/Users/zewei/local/str-HDL/sim_gwas/',
-                         simu.name,'c',prob.causal,'h',heritability,'e',DHSenrichment,'N',N)
+                         simu.name,'c',prob.causal,'h',heritability,'e',DHSenrichment,'N',N,'I',confound)
         ldsc.out<-paste0('/Users/zewei/local/str-HDL/result/',
-                         simu.name,'c',prob.causal,'h',heritability,'e',DHSenrichment,'N',N)
+                         simu.name,'c',prob.causal,'h',heritability,'e',DHSenrichment,'N',N,'I',confound)
         start_time <- Sys.time()
+        
+        #call previous result
+        pre.res=readRDS(paste0(gwas.out,'/gls.result.Rdata'))
         #section 1
         #gls pre
         gls.res.summary<-gls.res.summary.first<-list()
@@ -35,9 +41,12 @@ for (N in c(500,2500,5000,10000,20000,50000)) {
         ldsc.taus<-NA
         #simulation start
         for (simu.time in 1:simu) {
+          #pre.lambda
+          pre.lambda=pre.res[[total.stat.n*(simu.time-1)+4]]
+          
           #gls
           gwas.df<-read.table(paste0(gwas.out,'/chr10simgwas_test',simu.time,'.sumstat'),header = T)
-          y.sum<-sum(gwas.df[match(unlist(snp.list), gwas.df$SNP),'Z']**2-1)
+          y.sum<-sum(gwas.df[match(unlist(snp.list), gwas.df$SNP),'Z']**2-pre.lambda)
           raw.Ntau=y.sum/x.sum
           
           gwasN<-median(gwas.df$N,na.rm = T)
@@ -57,7 +66,7 @@ for (N in c(500,2500,5000,10000,20000,50000)) {
             if(total.block>0){
               raw.result<-foreach (i=1:total.block) %dopar% gls.left.right(i=i,x=x.gls,y=gwas.df,block.names.all = block.names.all,
                                                                            LDmatrix = LDmatrix,LDSM = LDSM,snp.list = snp.list,
-                                                                           raw.Ntau = raw.Ntau,intercept = T
+                                                                           raw.Ntau = raw.Ntau,intercept = T,lambda=pre.lambda
               )
               for (batch in 1:length(raw.result)) {
                 gls.left<-gls.left+raw.result[[batch]][[1]]
@@ -69,7 +78,7 @@ for (N in c(500,2500,5000,10000,20000,50000)) {
           print(simu.time)
           
           #first time result
-          result.one<-gls.estimator(left = gls.left,right = gls.right,
+          result.one<-gls.estimator(left = gls.left,right = gls.right,lambda=pre.lambda,
                                     A=Atotal,M.anno = M.anno,anno.total = anno.total,N = gwasN,intercept = T)
           
           gls.res.summary.first<-c(gls.res.summary.first,result.one)
@@ -86,7 +95,8 @@ for (N in c(500,2500,5000,10000,20000,50000)) {
         
         
         #saveRDS(raw.result,paste0(gwas.out,'/gls.result.2cat.Rdata'))
-        saveRDS(raw.result,paste0(gwas.out,'/gls.result.Rdata'))
+        saveRDS(raw.result,paste0(gwas.out,'/gls.result_v2.Rdata'))
+        }
       }
     }
   }

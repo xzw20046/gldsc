@@ -243,7 +243,7 @@ mean.data$Method[mean.data$Method=='ldsc']='s-LDSC'
 
 
 plot.e.N=ggplot(mean.data, aes(x=`True enrichment`, y=`Est enrichment`, color=Method))+
-  geom_point(size = 1.5,position=position_dodge(0.5))+ facet_grid(. ~ `Sample size`)+xlim(0,4)+ylim(-1,5)+
+  geom_point(size = 1.5,position=position_dodge(0.5))+ facet_grid(. ~ `Sample size`)+xlim(0,4)+ylim(-1,6)+
   #geom_dotplot(binaxis='y', stackdir='center', position=position_dodge(0.1))+
   geom_errorbar(aes(ymin=`Est enrichment`-1.96*sd.data$x, ymax=`Est enrichment`+1.96*sd.data$x), width=.2,
                 position=position_dodge(0.5))+geom_abline(slope=1, intercept=0,linetype = "dashed")+
@@ -254,9 +254,9 @@ plot.e.N=ggplot(mean.data, aes(x=`True enrichment`, y=`Est enrichment`, color=Me
   scale_colour_manual(values = c('#F8766D','#619CFF'))+
   theme(legend.position='top')+theme(legend.title=element_blank())
 
+plot.e.N
 
-
-plot.4.data2<-plot.4.data[which(plot.4.data$N %in% c('n = 5,000','n = 20,000',
+plot.4.data2<-plot.4.data[which(plot.4.data$N %in% c('n = 2,000','n = 20,000',
                                                      'n = 10,000','n = 50,000')),]
 plot.data2<-plot.4.data2[which(plot.4.data2$h2=='0.04'&
                                  plot.4.data2$causal=='0.05'),]
@@ -271,7 +271,7 @@ mean.data2$Method[mean.data2$Method=='ldsc']='s-LDSC'
 
 
 plot.e.N.004=ggplot(mean.data2, aes(x=`True enrichment`, y=`Est enrichment`, color=Method))+
-  geom_point(size = 1.5,position=position_dodge(0.5))+ facet_grid(. ~ `Sample size`)+xlim(0,4)+ylim(-6,8)+
+  geom_point(size = 1.5,position=position_dodge(0.5))+ facet_grid(. ~ `Sample size`)+xlim(0,4)+#ylim(-6,8)+
   #geom_dotplot(binaxis='y', stackdir='center', position=position_dodge(0.1))+
   geom_errorbar(aes(ymin=`Est enrichment`-1.96*sd.data2$x, ymax=`Est enrichment`+1.96*sd.data2$x), width=.2,
                 position=position_dodge(0.5))+geom_abline(slope=1, intercept=0,linetype = "dashed")+

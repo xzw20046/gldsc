@@ -1,15 +1,11 @@
 source activate ldsc
 
 ld_ref=/Users/zewei/local/ldsc_new_ref/baseline.10
-name1=DHS_newN
+name1=randomE
 
-for N in {500,2500,5000,10000,20000,50000}
+for N in {5000,10000,20000}
 do
-for E in {1,2,3}
-do
-for H in {0.04,0.4}
-do
-name=$name1"c0.05h"$H"e"$E"N"$N
+name=$name1"c0.05h0.4N"$N
 
 rm /Users/zewei/local/str-HDL/result/$name/ldsc_h2_v2.txt
 rm /Users/zewei/local/str-HDL/result/$name/ldsc_inter_v2.txt
@@ -26,7 +22,5 @@ cat $out/ldsc_v2_$simu.log | grep "Total Observed scale h2:" >> $out/ldsc_h2_v2.
 
 cat $out/ldsc_v2_$simu.log | grep "Intercept: " >> $out/ldsc_inter_v2.txt
 
-done
-done
 done
 done

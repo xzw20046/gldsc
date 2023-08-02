@@ -137,8 +137,8 @@ plot.pr.of.reject<-ggplot(data=p.a.data, aes(x=E, y=Prob, group=Methods, col=Met
   xlab('True fold enrichment')+ylab('Pr(rejected at P < 0.05)')+
   geom_point()+theme_light()+
   scale_colour_manual(values = c('#F8766D','#619CFF'))+
-  theme(legend.position='none')+theme(legend.title=element_blank())+
-  geom_text(size=3,colour='black',nudge_y = 0.025,nudge_x = -0.1)
+  theme(legend.position='none')+theme(legend.title=element_blank())#+
+  #geom_text(size=1.5,colour='black',nudge_y = 0.025,nudge_x = -0.1)
 
 plot.pr.of.reject
 

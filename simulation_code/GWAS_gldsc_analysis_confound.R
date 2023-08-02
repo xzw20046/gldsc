@@ -6,7 +6,7 @@ load('/Users/zewei/local/str-HDL/data/chr10ref.pannel.Rdata')
 source('/Users/zewei/Desktop/HKUgrad/G-LDSC/R/mlfun.R')
 simu<-50
 p.hole<-0.05/24
-simu.name='DHS_newN'
+simu.name='Confounding'
 
 registerDoParallel(5)
 
@@ -14,14 +14,17 @@ x.sum<-Reduce(sum,lapply(x.gls, sum))
 
 #change DHSenrichment to c(1,2,3)
 #N in c(5000,50000,500000)
-for (N in c(500,2500,5000,10000,20000,50000)) {
+for (N in c(2000,10000,50000)){
   for (prob.causal in c(0.05)) {
-    for (heritability in c(0.04,0.4)) {
-      for (DHSenrichment in c(1,2,3)) {
+    for (heritability in c(0.4)) {
+      for (DHSenrichment in c(3)) {
+        for (alpha in c(0,0.2/10000,1/10000,5/10000)) {
+        #set.seed(seedno+N)
+        confound=1+N*alpha
         gwas.out<-paste0('/Users/zewei/local/str-HDL/sim_gwas/',
-                         simu.name,'c',prob.causal,'h',heritability,'e',DHSenrichment,'N',N)
+                         simu.name,'c',prob.causal,'h',heritability,'e',DHSenrichment,'N',N,'I',confound)
         ldsc.out<-paste0('/Users/zewei/local/str-HDL/result/',
-                         simu.name,'c',prob.causal,'h',heritability,'e',DHSenrichment,'N',N)
+                         simu.name,'c',prob.causal,'h',heritability,'e',DHSenrichment,'N',N,'I',confound)
         start_time <- Sys.time()
         #section 1
         #gls pre
@@ -87,6 +90,7 @@ for (N in c(500,2500,5000,10000,20000,50000)) {
         
         #saveRDS(raw.result,paste0(gwas.out,'/gls.result.2cat.Rdata'))
         saveRDS(raw.result,paste0(gwas.out,'/gls.result.Rdata'))
+        }
       }
     }
   }
